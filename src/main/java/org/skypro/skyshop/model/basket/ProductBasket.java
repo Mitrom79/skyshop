@@ -12,7 +12,7 @@ public class ProductBasket {
     private final Map<UUID, Integer> basket;
 
     public ProductBasket(Map<UUID, Integer> basket) {
-        this.basket= new HashMap<>();
+        basket= new HashMap<>();
     }
 
     public void addProduct(UUID productId) {
