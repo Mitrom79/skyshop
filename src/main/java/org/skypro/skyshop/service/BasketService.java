@@ -4,32 +4,32 @@ import org.skypro.skyshop.model.basket.BasketItem;
 import org.skypro.skyshop.model.basket.ProductBasket;
 import org.skypro.skyshop.model.basket.UserBasket;
 import org.skypro.skyshop.model.product.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-//import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.*;
-
 @Service
-
 public class BasketService {
-    private final ProductBasket;
+    private final ProductBasket productBasket;
     private final StorageService storageService;
-
-    public BasketService(Map<UUID, Integer> basket, StorageService storageService) {
-        this.basket = basket;
+    @Autowired
+    BasketService(ProductBasket productBasket, StorageService storageService) {
+        this.productBasket = productBasket;
         this.storageService = storageService;
     }
 
     public void addProduct(UUID id) {
-        Optional<Product> product = storageService.getProductById(id);
-        if(product.isEmpty()) throw new IllegalArgumentException();
-        basket.merge(id, 1, Integer::sum);
+        if (!storageService.getProductById(id).isPresent()) {
+            throw new IllegalArgumentException();
+        } else {
+            productBasket.addProduct(id);
+        }
     }
 
     public UserBasket getUserBasket() {
         ArrayList<BasketItem> basketItems = new ArrayList<>();
 
-        for (Map.Entry<UUID, Integer> entry : basket.entrySet()) {
+        for (Map.Entry<UUID, Integer> entry : productBasket.getBasket().entrySet()) {
             UUID productId = entry.getKey();
             int count = entry.getValue();
 
