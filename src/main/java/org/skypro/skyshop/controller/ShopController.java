@@ -1,5 +1,6 @@
 package org.skypro.skyshop.controller;
 
+import org.skypro.skyshop.exception.NoSuchProductException;
 import org.skypro.skyshop.model.article.Article;
 import org.skypro.skyshop.model.basket.UserBasket;
 import org.skypro.skyshop.model.product.Product;
@@ -44,14 +45,9 @@ public class ShopController {
     }
     @GetMapping("/basket/{id}")
     public String addProduct(@PathVariable("id") UUID id) {
-        try {
             basketService.addProduct(id);
             return "*Продукт успешно добавлен*";
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException();
-        } catch (Exception e) {
-            return "Ошибка";
-        }
+
     }
 
     @GetMapping("/basket")
